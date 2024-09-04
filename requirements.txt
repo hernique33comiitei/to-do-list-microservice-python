@@ -1,0 +1,7 @@
+cryptography
+fastapi[standard]==0.112.2
+PyMySQL==1.1.1 
+SQLAlchemy==2.0.34 
+python-dotenv==1.0.1 
+pytest==8.3.2
+pytest-mock==3.14.0 

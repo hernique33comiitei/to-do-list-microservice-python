@@ -1,0 +1,39 @@
+services:
+  db:
+    image: mysql:8.0.36
+    env_file:
+      - .env
+    networks:
+      - internalNetwork
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_HOST: ${MYSQL_HOST}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3308:3306"
+
+  posttaskmodule:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # command: pytest
+    command: uvicorn src.createTasksModule.main:app --host 0.0.0.0 --port $PORT_TASKPOSTMODULE;
+    ports:
+      - "$PORT_TASKPOSTMODULE:$PORT_TASKPOSTMODULE"
+    networks:
+      - internalNetwork
+    depends_on:
+      - db
+
+volumes:
+  mysql_data:
+
+networks:
+  internalNetwork:
+    driver: bridge
