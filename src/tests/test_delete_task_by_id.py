@@ -2,16 +2,17 @@ from fastapi import HTTPException
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from createTasksModule.controller import create_tasks_controller
-from putTasksModule.controller import put_task_by_id_controller
+from getTasksModule.controller import get_task_by_id_controller
 from schemas import Base
 from globalTypes import Tasks, TaskWithId
+from deleteTasksModule.controller import delete_task_by_id_controller
 import pytest
 
 DATABASE_URL = 'sqlite:///:memory:'
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-class TestPutTasksModule:
+class TestDeleteTaskById:
     @classmethod
     def setup_class(cls):
         Base.metadata.create_all(engine)
@@ -21,11 +22,6 @@ class TestPutTasksModule:
             description="Description task",
             completed=False 
         )
-        cls.updated_task_data = Tasks(
-            title="Title update",
-            description="Description update",
-            completed=True 
-        )
 
     @classmethod
     def teardown_class(cls):
@@ -33,18 +29,18 @@ class TestPutTasksModule:
         cls.session.close()
 
     @pytest.mark.asyncio
-    async def test_put_task_by_id_controller(self):
+    async def test_delete_task_by_id_controller(self):
         db = SessionLocal()
 
         new_task = create_tasks_controller(self.valid_task_data, db=db)
-        task_to_put_dict: TaskWithId = TaskWithId.model_validate(new_task).model_dump()
+        task_to_delete_dict: TaskWithId = TaskWithId.model_validate(new_task).model_dump()
 
-        task_id = task_to_put_dict["id"]
-        task_updated = await put_task_by_id_controller(task_id=task_id, task_update=self.updated_task_data, db=db)
-        task_updated_dict: TaskWithId = TaskWithId.model_validate(task_updated).model_dump()
+        task_id = task_to_delete_dict["id"]
+        await delete_task_by_id_controller(task_id=task_id, db=db)
 
-        assert task_updated_dict["title"] == "Title update"
-        assert task_updated_dict["description"] == "Description update"
-        assert task_updated_dict["completed"] == True
+        with pytest.raises(HTTPException) as excinfo:
+                await get_task_by_id_controller(task_id, db=db)
+
+        assert excinfo.value.status_code == 404
 
 

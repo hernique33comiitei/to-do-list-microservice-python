@@ -4,7 +4,6 @@ from getTasksModule.controller import get_all_task_controller, get_task_by_id_co
 from globalTypes import ErrorResponse, TaskWithId
 from schemas import defaultDatabase
 
-
 app = FastAPI()
 
 @app.get(
