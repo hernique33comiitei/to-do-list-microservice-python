@@ -5,8 +5,11 @@ class Tasks(BaseModel):
     description: str
     completed: bool
 
-class TasksReturn(Tasks):
+class TaskWithId(Tasks):
     id: int
+
+    class Config:
+        from_attributes = True
 
 class ErrorResponse(BaseModel):
     errorMessage: str

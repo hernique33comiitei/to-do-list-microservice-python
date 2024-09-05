@@ -6,14 +6,16 @@ DATABASE_URL = 'sqlite:///:memory:'
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-class TestCreateTasksModule:
+class TestGetTasksModulet:
     @classmethod
     def setup_class(cls):
         Base.metadata.create_all(engine)
         cls.session = SessionLocal()
         cls.valid_task = Task(
+            id=33,
             title="Title task",
-            description="Description task"
+            description="Description task",
+            completed=False
         )
 
     @classmethod
@@ -21,7 +23,7 @@ class TestCreateTasksModule:
         cls.session.rollback()
         cls.session.close()
 
-    def test_create_tasks_controller(self):
+    def test_get_task_by_id_controller(self):
         self.session.add(self.valid_task)
         self.session.commit()
 
