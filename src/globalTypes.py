@@ -7,3 +7,8 @@ class Tasks(BaseModel):
 
 class TasksReturn(Tasks):
     id: int
+
+class ErrorResponse(BaseModel):
+    errorMessage: str
+    errorCode: int
+    errorDescription: str
