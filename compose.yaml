@@ -27,13 +27,25 @@ services:
     ports:
       - "6370:6379"
 
+  pytest:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: ["/usr/local/bin/wait-for-it.sh"]
+    networks:
+      - internalNetwork
+    depends_on:
+      - db
+      - redis
+
   post_task_module:
     env_file:
       - .env
     build:
       context: .
       dockerfile: Dockerfile
-    # command: pytest
     command: uvicorn src.createTasksModule.main:app --host 0.0.0.0 --port $PORT_TASKPOSTMODULE;
     ports:
       - "$PORT_TASKPOSTMODULE:$PORT_TASKPOSTMODULE"
