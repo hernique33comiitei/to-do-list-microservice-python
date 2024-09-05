@@ -6,9 +6,9 @@ from globalTypes import TaskWithId
 from schemas import Task, defaultDatabase
 from config.redisConfig import redis_connection
 import json
+from sqlalchemy.orm import Session
 
-async def get_task_by_id_controller(task_id: int) -> TaskWithId:
-    db = defaultDatabase()
+async def get_task_by_id_controller(task_id: int, db: Session) -> TaskWithId:
     redis = await redis_connection()
 
     cache_key = f"task:{task_id}"
@@ -40,8 +40,7 @@ async def get_task_by_id_controller(task_id: int) -> TaskWithId:
 
 
 
-async def get_all_task_controller() -> List[TaskWithId]:
-    db = defaultDatabase()
+async def get_all_task_controller(db: Session) -> List[TaskWithId]:
     redis = await redis_connection()
 
     cache_key = "task:get_all"

@@ -1,6 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from schemas import Base, Task
+from schemas import Base, Task as TaskModel
+from globalTypes import Tasks, TaskWithId
+from createTasksModule.controller import create_tasks_controller  
 
 DATABASE_URL = 'sqlite:///:memory:'
 engine = create_engine(DATABASE_URL)
@@ -11,9 +13,10 @@ class TestCreateTasksModule:
     def setup_class(cls):
         Base.metadata.create_all(engine)
         cls.session = SessionLocal()
-        cls.valid_task = Task(
+        cls.valid_task_data = Tasks(
             title="Title task",
-            description="Description task"
+            description="Description task",
+            completed=False  
         )
 
     @classmethod
@@ -22,12 +25,14 @@ class TestCreateTasksModule:
         cls.session.close()
 
     def test_create_tasks_controller(self):
-        self.session.add(self.valid_task)
-        self.session.commit()
+        new_task = create_tasks_controller(self.valid_task_data)
 
-        task = self.session.query(Task).filter_by(title="Title task").first()
+        task = self.session.query(TaskModel).filter_by(title="Title task").first()
+        assert task is not None
         assert task.title == "Title task"
-        assert task.title != "title"
         assert task.description == "Description task"
-        assert task.description != "description"
         assert task.completed == False
+
+        assert isinstance(new_task, TaskWithId)
+        assert new_task.title == "Title task"
+        assert new_task.description == "Description task"

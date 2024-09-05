@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, Column, Integer, String, Boolean
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.orm import declarative_base, sessionmaker, Session
 from dotenv import load_dotenv
 import os
 
@@ -29,7 +29,7 @@ def setup_database(database_url):
     SessionLocal = get_session_local(engine)
     return engine, SessionLocal
 
-def defaultDatabase():
+def defaultDatabase() -> Session:
     DATABASE_URL = os.getenv('DATABASE_URL')
     engine, SessionLocal = setup_database(DATABASE_URL)
     return SessionLocal()

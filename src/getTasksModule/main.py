@@ -2,6 +2,8 @@ from typing import List
 from fastapi import FastAPI, status
 from getTasksModule.controller import get_all_task_controller, get_task_by_id_controller
 from globalTypes import ErrorResponse, TaskWithId
+from schemas import defaultDatabase
+
 
 app = FastAPI()
 
@@ -16,7 +18,8 @@ app = FastAPI()
     status_code=status.HTTP_200_OK
 )
 async def get_task_by_id(task_id: int) -> TaskWithId:
-    return await get_task_by_id_controller(task_id=task_id)
+    db = defaultDatabase()
+    return await get_task_by_id_controller(task_id=task_id,db=db)
 
 @app.get(
     "/tasks/",
@@ -30,4 +33,5 @@ async def get_task_by_id(task_id: int) -> TaskWithId:
     status_code=status.HTTP_200_OK
 )
 async def get_all_tasks() -> List[TaskWithId]:
-    return await get_all_task_controller()
+    db = defaultDatabase()
+    return await get_all_task_controller(db=db)
