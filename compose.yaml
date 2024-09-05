@@ -16,7 +16,18 @@ services:
     ports:
       - "3308:3306"
 
-  posttaskmodule:
+  redis:
+    image: redis:7.4.0
+    env_file:
+      - .env
+    networks:
+      - internalNetwork
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6370:6379"
+
+  post_task_module:
     env_file:
       - .env
     build:
@@ -31,8 +42,24 @@ services:
     depends_on:
       - db
 
+  get_task_module:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn src.getTasksModule.main:app --host 0.0.0.0 --port $PORT_TASKGETMODULE;
+    ports:
+      - "$PORT_TASKGETMODULE:$PORT_TASKGETMODULE"
+    networks:
+      - internalNetwork
+    depends_on:
+      - db
+      - redis
+
 volumes:
   mysql_data:
+  redis_data:
 
 networks:
   internalNetwork:

@@ -28,3 +28,8 @@ def setup_database(database_url):
     Base.metadata.create_all(engine)
     SessionLocal = get_session_local(engine)
     return engine, SessionLocal
+
+def defaultDatabase():
+    DATABASE_URL = os.getenv('DATABASE_URL')
+    engine, SessionLocal = setup_database(DATABASE_URL)
+    return SessionLocal()

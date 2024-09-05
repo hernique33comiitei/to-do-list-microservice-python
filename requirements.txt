@@ -5,3 +5,5 @@ SQLAlchemy==2.0.34
 python-dotenv==1.0.1 
 pytest==8.3.2
 pytest-mock==3.14.0 
+redis==5.0.8
+aioredis==2.0.1 

@@ -1,5 +1,5 @@
 from fastapi import FastAPI, status
-from createTasksModule.types import Tasks, TasksReturn
+from globalTypes import Tasks, TasksReturn
 from createTasksModule.controller import create_tasks_controller
 
 app = FastAPI()

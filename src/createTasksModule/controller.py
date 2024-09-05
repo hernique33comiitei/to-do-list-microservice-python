@@ -1,12 +1,7 @@
-from createTasksModule.types import Tasks, TasksReturn
-from schemas import Task, setup_database
+from globalTypes import Tasks, TasksReturn
+from schemas import Task, defaultDatabase
 
-import os
-
-DATABASE_URL = os.getenv('DATABASE_URL')
-engine, SessionLocal = setup_database(DATABASE_URL)
-
-db = SessionLocal()
+db = defaultDatabase()
 
 def create_tasks_controller(task: Tasks) -> TasksReturn:
     new_task = Task(title=task.title, description=task.description)
