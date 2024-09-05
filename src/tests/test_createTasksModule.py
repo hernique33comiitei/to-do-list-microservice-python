@@ -25,14 +25,15 @@ class TestCreateTasksModule:
         cls.session.close()
 
     def test_create_tasks_controller(self):
-        new_task = create_tasks_controller(self.valid_task_data)
+        db = SessionLocal()
+        new_task = create_tasks_controller(self.valid_task_data, db=db)
 
-        task = self.session.query(TaskModel).filter_by(title="Title task").first()
+        task: TaskWithId = TaskWithId.model_validate(new_task).model_dump()
+
         assert task is not None
-        assert task.title == "Title task"
-        assert task.description == "Description task"
-        assert task.completed == False
+        assert task["title"] == "Title task"
+        assert task["description"] == "Description task"
+        assert task["completed"] == False
 
-        assert isinstance(new_task, TaskWithId)
-        assert new_task.title == "Title task"
-        assert new_task.description == "Description task"
+        assert task["title"] == "Title task"
+        assert task["description"] == "Description task"
