@@ -33,7 +33,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    entrypoint: ["/usr/local/bin/wait-for-it.sh"]
+    entrypoint: ["pytest"]
     networks:
       - internalNetwork
     depends_on:
