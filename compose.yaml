@@ -53,6 +53,7 @@ services:
       - internalNetwork
     depends_on:
       - db
+      - pytest
 
   get_task_module:
     env_file:
@@ -68,6 +69,7 @@ services:
     depends_on:
       - db
       - redis
+      - pytest
 
   delete_task_module:
     env_file:
@@ -75,13 +77,44 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: uvicorn src.deleteTasksModule.main:app --host 0.0.0.0 --port $PORT_TASDELETETMODULE;
+    command: uvicorn src.deleteTasksModule.main:app --host 0.0.0.0 --port $PORT_TASKDELETEMODULE;
     ports:
-      - "$PORT_TASDELETETMODULE:$PORT_TASDELETETMODULE"
+      - "$PORT_TASKDELETEMODULE:$PORT_TASKDELETEMODULE"
     networks:
       - internalNetwork
     depends_on:
       - db
+      - pytest
+
+  put_task_module:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn src.putTasksModule.main:app --host 0.0.0.0 --port $PORT_TASKPUTMODULE;
+    ports:
+      - "$PORT_TASKPUTMODULE:$PORT_TASKPUTMODULE"
+    networks:
+      - internalNetwork
+    depends_on:
+      - db
+      - pytest
+
+  patch_task_module:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn src.patchTasksModule.main:app --host 0.0.0.0 --port $PORT_TASKPATCHMODULE;
+    ports:
+      - "$PORT_TASKPATCHMODULE:$PORT_TASKPATCHMODULE"
+    networks:
+      - internalNetwork
+    depends_on:
+      - db
+      - pytest
 
 volumes:
   mysql_data:

@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 
 class Tasks(BaseModel):
@@ -10,6 +11,11 @@ class TaskWithId(Tasks):
 
     class Config:
         from_attributes = True
+
+class PartialTasks(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    status: Optional[str] = None
 
 class ErrorResponse(BaseModel):
     errorMessage: str
