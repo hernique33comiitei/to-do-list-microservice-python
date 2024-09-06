@@ -83,3 +83,11 @@ kubectl apply -f Services.yaml
 ```
 
 14. After running these commands, execute `kubectl get services`. All services with an `EXTERNAL-IP` are the load balancers for each module. Each IP address corresponds to a module of the microservice, with a total of 5 modules. To access any module, simply use the IP address on port 80.
+
+### Test URLs
+
+Get module - [http://35.226.237.75/docs](http://35.226.237.75/docs)  
+Post module - [http://34.27.226.71/docs](http://34.27.226.71/docs)  
+Put module - [http://34.45.153.231/docs](http://34.45.153.231/docs)  
+Patch module - [http://34.170.85.98/docs](http://34.170.85.98/docs)  
+Delete module - [http://34.46.131.109/docs](http://34.46.131.109/docs)
