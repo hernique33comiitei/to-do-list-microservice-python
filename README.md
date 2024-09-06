@@ -15,9 +15,11 @@ It is also necessary to have a Google Cloud account. If you don’t have one, yo
 To run the project in a development environment, follow these steps:
 
 1. Clone this repository:
-   ```bash
-   git clone https://github.com/hernique33comiitei/to-do-list-microservice-python.git
-   ```
+
+```bash
+git clone https://github.com/hernique33comiitei/to-do-list-microservice-python.git
+```
+
 2. Navigate to the directory and rename `.env.example` to `.env`.
 
 3. After doing that, simply run the command `docker compose up --build`. If you prefer not to keep your terminal busy, use `docker compose up --build -d` instead, and then check the created containers with `docker compose ps`.
@@ -55,3 +57,29 @@ To run the project in a development environment, follow these steps:
 9. In the upper-right corner, next to the `Learn` button, click on `Switch to Standard cluster` and confirm.
 
 10. Now you can click `Create` with all the default settings. The creation of the cluster takes approximately 5 minutes.
+
+11. After creating the instance, click on it, and at the top center of the screen, click on `Connect`. There are two ways to connect using `gcloud`: you can either download and configure the `gcloud` CLI, or connect through the integrated Google Cloud Shell. We will use the second option: `RUN IN CLOUD SHELL`. Wait for it to load, and when the terminal opens, press Enter on your keyboard to execute the command on your command line.
+
+**Note:** If you chose to build and use your own image, run the following commands using `nano Deployments.yaml` and update the `image` fields with the address of the image you built. If you skipped this step and went directly to step 5 of this tutorial, simply run the commands below.
+
+12. Execute the following commands in the cloud shell:
+
+```bash
+curl -L -o ConfigMap.yaml https://raw.githubusercontent.com/hernique33comiitei/to-do-list-microservice-python/main/ConfigMap.yaml
+curl -L -o Deployments.yaml https://raw.githubusercontent.com/hernique33comiitei/to-do-list-microservice-python/main/Deployments.yaml
+curl -L -o PersistentVolumeClaim.yaml https://raw.githubusercontent.com/hernique33comiitei/to-do-list-microservice-python/main/PersistentVolumeClaim.yaml
+curl -L -o Secret.yaml https://raw.githubusercontent.com/hernique33comiitei/to-do-list-microservice-python/main/Secret.yaml
+curl -L -o Services.yaml https://raw.githubusercontent.com/hernique33comiitei/to-do-list-microservice-python/main/Services.yaml
+```
+
+13. Execute the following commands in the cloud shell:
+
+```bash
+kubectl apply -f ConfigMap.yaml
+kubectl apply -f Deployments.yaml
+kubectl apply -f PersistentVolumeClaim.yaml
+kubectl apply -f Secret.yaml
+kubectl apply -f Services.yaml
+```
+
+14. After running these commands, execute `kubectl get services`. All services with an `EXTERNAL-IP` are the load balancers for each module. Each IP address corresponds to a module of the microservice, with a total of 5 modules. To access any module, simply use the IP address on port 80.
