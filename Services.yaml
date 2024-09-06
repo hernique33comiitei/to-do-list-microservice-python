@@ -1,0 +1,166 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: post-task-module
+  namespace: default
+spec:
+  selector:
+    app: post-task-module
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: get-task-module
+  namespace: default
+spec:
+  selector:
+    app: get-task-module
+  ports:
+    - protocol: TCP
+      port: 5001
+      targetPort: 5001
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: delete-task-module
+  namespace: default
+spec:
+  selector:
+    app: delete-task-module
+  ports:
+    - protocol: TCP
+      port: 5003
+      targetPort: 5003
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: put-task-module
+  namespace: default
+spec:
+  selector:
+    app: put-task-module
+  ports:
+    - protocol: TCP
+      port: 5004
+      targetPort: 5004
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: patch-task-module
+  namespace: default
+spec:
+  selector:
+    app: patch-task-module
+  ports:
+    - protocol: TCP
+      port: 5005
+      targetPort: 5005
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  namespace: default
+spec:
+  selector:
+    app: mysql
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: default
+spec:
+  ports:
+    - port: 6379
+      targetPort: 6379
+  selector:
+    app: redis
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: delete-task-module-lb
+  namespace: default
+spec:
+  type: LoadBalancer
+  selector:
+    app: delete-task-module
+  ports:
+    - name: delete-task
+      port: 80
+      targetPort: 5003
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: get-task-module-lb
+  namespace: default
+spec:
+  type: LoadBalancer
+  selector:
+    app: get-task-module
+  ports:
+    - name: get-task
+      port: 80
+      targetPort: 5001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: patch-task-module-lb
+  namespace: default
+spec:
+  type: LoadBalancer
+  selector:
+    app: patch-task-module
+  ports:
+    - name: patch-task
+      port: 80
+      targetPort: 5005
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: post-task-module-lb
+  namespace: default
+spec:
+  type: LoadBalancer
+  selector:
+    app: post-task-module
+  ports:
+    - name: post-task
+      port: 80
+      targetPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: put-task-module-lb
+  namespace: default
+spec:
+  type: LoadBalancer
+  selector:
+    app: put-task-module
+  ports:
+    - name: put-task
+      port: 80
+      targetPort: 5004

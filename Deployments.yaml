@@ -1,0 +1,251 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-task-module
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: post-task-module
+  template:
+    metadata:
+      labels:
+        app: post-task-module
+    spec:
+      containers:
+        - name: post-task-module
+          image: hernique33comiitei/to-do-list-microservice-python:v0.0.1
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+          command:
+            [
+              "uvicorn",
+              "src.createTasksModule.main:app",
+              "--host",
+              "0.0.0.0",
+              "--port",
+              "5000",
+            ]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: get-task-module
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: get-task-module
+  template:
+    metadata:
+      labels:
+        app: get-task-module
+    spec:
+      containers:
+        - name: get-task-module
+          image: hernique33comiitei/to-do-list-microservice-python:v0.0.1
+          ports:
+            - containerPort: 5001
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+          command:
+            [
+              "uvicorn",
+              "src.getTasksModule.main:app",
+              "--host",
+              "0.0.0.0",
+              "--port",
+              "5001",
+            ]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: delete-task-module
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: delete-task-module
+  template:
+    metadata:
+      labels:
+        app: delete-task-module
+    spec:
+      containers:
+        - name: delete-task-module
+          image: hernique33comiitei/to-do-list-microservice-python:v0.0.1
+          ports:
+            - containerPort: 5003
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+          command:
+            [
+              "uvicorn",
+              "src.deleteTasksModule.main:app",
+              "--host",
+              "0.0.0.0",
+              "--port",
+              "5003",
+            ]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: put-task-module
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: put-task-module
+  template:
+    metadata:
+      labels:
+        app: put-task-module
+    spec:
+      containers:
+        - name: put-task-module
+          image: hernique33comiitei/to-do-list-microservice-python:v0.0.1
+          ports:
+            - containerPort: 5004
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+          command:
+            [
+              "uvicorn",
+              "src.putTasksModule.main:app",
+              "--host",
+              "0.0.0.0",
+              "--port",
+              "5004",
+            ]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: patch-task-module
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: patch-task-module
+  template:
+    metadata:
+      labels:
+        app: patch-task-module
+    spec:
+      containers:
+        - name: patch-task-module
+          image: hernique33comiitei/to-do-list-microservice-python:v0.0.1
+          ports:
+            - containerPort: 5005
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+          command:
+            [
+              "uvicorn",
+              "src.patchTasksModule.main:app",
+              "--host",
+              "0.0.0.0",
+              "--port",
+              "5005",
+            ]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0.36
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: MYSQL_ROOT_PASSWORD
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: MYSQL_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: MYSQL_PASSWORD
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: MYSQL_DATABASE
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7.4.0
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+      volumes:
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: redis-pvc
