@@ -28,6 +28,8 @@ To run the project in a development environment, follow these steps:
 
 ### Running on Kubernetes
 
+**Note:** If you prefer to use the provided default image, you can skip to item 5 of this section. If you wish to build and use your own image, make sure to update the `Deployments.yaml` file by replacing the `image` field with the name of your custom image.
+
 1. Let's build the image. Within the directory you cloned, use the following command:
 
    ```bash
